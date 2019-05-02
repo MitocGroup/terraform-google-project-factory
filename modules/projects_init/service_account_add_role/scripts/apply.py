@@ -30,28 +30,19 @@ service = discovery.build('cloudresourcemanager', 'v1', credentials=credentials)
 resource = os.environ['project_id']  # TODO: Update placeholder value.
 
 set_iam_policy_request_body = {
-    # TODO: Add desired entries to the request body.
-}
-
-request = service.projects().setIamPolicy(resource=resource, body=set_iam_policy_request_body)
-response = request.execute()
-
-
-# REQUIRED: The resource for which the policy is being specified.
-# See the operation documentation for the appropriate value for this field.
-resource = 'projects/' + os.environ['project_id'] + '/serviceAccounts/' + os.environ['service_account_name']  # TODO: Update placeholder value.
-
-set_iam_policy_request_body = {
     "policy": {
         "bindings": [
             {
+                "members": [
+                    "serviceAccount:"+ os.environ['service_account_name']
+                ],
                 "role": "roles/editor"
             }
         ]
     }
 }
 
-request = service.projects().serviceAccounts().setIamPolicy(resource=resource, body=set_iam_policy_request_body)
+request = service.projects().setIamPolicy(resource=resource, body=set_iam_policy_request_body)
 response = request.execute()
 
 pprint('Success add role to service account: ' + os.environ['service_account_name'])
