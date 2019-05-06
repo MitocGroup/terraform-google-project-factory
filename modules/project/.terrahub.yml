@@ -3,7 +3,7 @@ component:
   name: project
   dependsOn:
     - ../project_default_import
-    - ../project_default_import
+    - ../project_default_service_account_key
   template:
     provider:
       google:
