@@ -13,8 +13,6 @@ project:
 terraform:
   varFile:
     - 'default.tfvars'
-  varFiles:
-    project_default: s3://xxxxxx/tfvars/terraform-google-project-factory/project_default/default.tfvars
 #   var:
 #     region: us-east-1
 #     account_id: 123456789012
