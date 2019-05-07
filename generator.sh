@@ -1,74 +1,110 @@
 #!/bin/bash
 rm -rf ./modules
-rm ./.terrahub.yml
-terrahub project -n terraform-google-project-factory -d ./
-terrahub configure -c terraform.version=0.11.11
-terrahub configure -c template.provider.google={}
+# rm ./.terrahub.yml
+# terrahub project -n terraform-google-project-factory -d ./
+# terrahub configure -c terraform.version=0.11.11
+# terrahub configure -c template.provider.google={}
 mkdir modules
-mkdir modules/gsuite_group
-terrahub component -n gsuite_group -d ./modules/gsuite_group/
-terrahub configure -i gsuite_group -c component.template.locals.domain='${var.domain != "" ? var.domain : data.google_organization.org.domain}'
-terrahub configure -i gsuite_group -c component.template.locals.email='${format("%s@%s", var.name, local.domain)}'
-terrahub configure -i gsuite_group -c component.template.data.google_organization.org.organization='${var.org_id}'
-terrahub configure -i gsuite_group -c component.template.output.domain.value='${local.domain}'
-terrahub configure -i gsuite_group -c component.template.output.domain.description='The domain of the groups organization.'
-terrahub configure -i gsuite_group -c component.template.output.email.value='${local.email}'
-terrahub configure -i gsuite_group -c component.template.output.email.description='The email address of the group.'
-terrahub configure -i gsuite_group -c component.template.variable.domain.description='The domain name'
-terrahub configure -i gsuite_group -c component.template.variable.domain.default=''
-terrahub configure -i gsuite_group -c component.template.variable.name.description='The name of the group.'
-terrahub configure -i gsuite_group -c component.template.variable.org_id.description='The organization ID.'
-terrahub convert -i gsuite_group --to hcl -y
-mkdir modules/project_services
-terrahub component -n project_services -d ./modules/project_services/
-terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.count='${var.enable_apis ? length(var.activate_apis) : 0}'
-terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.project='${var.project_id}'
-terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.service='${element(var.activate_apis, count.index)}'
-terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.disable_on_destroy='${var.disable_services_on_destroy}'
-terrahub configure -i project_services -c component.template.output.project_id.value='${element(concat(google_project_service.project_services.*.project, list("")),0)}'
-terrahub configure -i project_services -c component.template.output.project_id.description='The GCP project you want to enable APIs on'
-terrahub configure -i project_services -c component.template.variable.project_id.description='The GCP project you want to enable APIs on'
-terrahub configure -i project_services -c component.template.variable.enable_apis.default='true'
-terrahub configure -i project_services -c component.template.variable.enable_apis.description='Whether to actually enable the APIs. If false, this module is a no-op.'
-terrahub configure -i project_services -c component.template.variable.activate_apis.type='list'
-terrahub configure -i project_services -c component.template.variable.activate_apis.description='The list of apis to activate within the project'
-terrahub configure -i project_services -c component.template.variable.disable_services_on_destroy.type='string'
-terrahub configure -i project_services -c component.template.variable.disable_services_on_destroy.default='true'
-terrahub configure -i project_services -c component.template.variable.disable_services_on_destroy.description='Whether project services will be disabled when the resources are destroyed. https://www.terraform.io/docs/providers/google/r/google_project_service.html#disable_on_destroy'
-terrahub convert -i project_services --to hcl -y
-mkdir modules/app_engine
-terrahub component -n app_engine -d ./modules/app_engine/
-terrahub configure -i app_engine -c component.template.resource.google_app_engine_application.main.project='${var.project_id}'
-terrahub configure -i app_engine -c component.template.resource.google_app_engine_application.main.location_id='${var.location_id}'
-terrahub configure -i app_engine -c component.template.resource.google_app_engine_application.main.auth_domain='${var.auth_domain}'
-terrahub configure -i app_engine -c component.template.resource.google_app_engine_application.main.serving_status='${var.serving_status}'
-terrahub configure -i app_engine -c component.template.resource.google_app_engine_application.main.feature_settings='${var.feature_settings}'
-terrahub configure -i app_engine -c component.template.output.name.value='${google_app_engine_application.main.name}'
-terrahub configure -i app_engine -c component.template.output.name.description='Unique name of the app, usually apps/{PROJECT_ID}.'
-terrahub configure -i app_engine -c component.template.output.url_dispatch_rule.value='${google_app_engine_application.main.url_dispatch_rule}'
-terrahub configure -i app_engine -c component.template.output.url_dispatch_rule.description='A list of dispatch rule blocks. Each block has a domain, path, and service field.'
-terrahub configure -i app_engine -c component.template.output.code_bucket.value='${google_app_engine_application.main.code_bucket}'
-terrahub configure -i app_engine -c component.template.output.code_bucket.description='The GCS bucket code is being stored in for this app.'
-terrahub configure -i app_engine -c component.template.output.default_hostname.value='${google_app_engine_application.main.default_hostname}'
-terrahub configure -i app_engine -c component.template.output.default_hostname.description='The default hostname for this app.'
-terrahub configure -i app_engine -c component.template.output.default_bucket.value='${google_app_engine_application.main.default_bucket}'
-terrahub configure -i app_engine -c component.template.output.default_bucket.description='The GCS bucket content is being stored in for this app.'
-terrahub configure -i app_engine -c component.template.variable.project_id.description='The project to enable app engine on.'
-terrahub configure -i app_engine -c component.template.variable.location_id.description='The location to serve the app from.'
-terrahub configure -i app_engine -c component.template.variable.location_id.default=''
-terrahub configure -i app_engine -c component.template.variable.auth_domain.description='The domain to authenticate users with when using App Engines User API.'
-terrahub configure -i app_engine -c component.template.variable.auth_domain.default=''
-terrahub configure -i app_engine -c component.template.variable.serving_status.description='The serving status of the app.'
-terrahub configure -i app_engine -c component.template.variable.serving_status.default='SERVING'
-terrahub configure -i app_engine -c component.template.variable.feature_settings.description='A list of maps of optional settings to configure specific App Engine features.'
-terrahub configure -i app_engine -c component.template.variable.feature_settings.default=[]
-terrahub convert -i app_engine --to hcl -y
-mkdir modules/gsuite_enabled
-terrahub component -n gsuite_enabled -d ./modules/gsuite_enabled/
-terrahub configure -i gsuite_enabled -c component.template.locals.group_name='${var.group_name != "" ? var.group_name : format("%s-editors", var.name)}'
-terrahub configure -i gsuite_enabled -c component.template.resource.gsuite_group_member.service_account_sa_group_member.count='${var.sa_group != "" ? 1 : 0}'
-terrahub configure -i gsuite_enabled -c component.template.resource.gsuite_group_member.service_account_sa_group_member.group='${var.sa_group}'
-terrahub configure -i gsuite_enabled -c component.template.resource.gsuite_group_member.service_account_sa_group_member.email='${module.project-factory.service_account_email}'
-terrahub configure -i gsuite_enabled -c component.template.resource.gsuite_group_member.service_account_sa_group_member.role='MEMBER'
-terrahub configure -i gsuite_enabled -c component.template.resource.gsuite_group_member.service_account_sa_group_member.role='MEMBER'
-terrahub configure -i gsuite_enabled -c component.template.resource.gsuite_group_member.service_account_sa_group_member.role='MEMBER'
+cd modules
+# Create project_default
+terrahub component -n project_default -t google_project_default
+terrahub configure -i project_default -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+# Create project_default_service_account
+terrahub component -n project_default_service_account -t google_project_default_service_account
+terrahub configure -i project_default_service_account -c component.dependsOn[0]='../project_default'
+terrahub configure -i project_default_service_account -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate'
+terrahub configure -i project_default_service_account -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_account -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_account -c component.template.variable -D -y
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner -D -y
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner=[]
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.local-exec.when='create'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.local-exec.environment.service_account_name='${var.project_default_service_account_service_account_name}'
+terrahub configure -i project_default_service_account -c component.template.output.service_account_name.value='${data.terraform_remote_state.project_default.project_id}@${data.terraform_remote_state.project_default.project_id}.iam.gserviceaccount.com'
+terrahub configure -i project_default_service_account -c component.template.variable.service_account_name.type='string'
+# Create project_default_service_account_key
+terrahub component -n project_default_service_account_key -t google_project_default_service_account_key
+terrahub configure -i project_default_service_account_key -c component.dependsOn[0]='../project_default'
+terrahub configure -i project_default_service_account_key -c component.dependsOn[1]='../project_default_service_account'
+terrahub configure -i project_default_service_account_key -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account_key/terraform.tfstate'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default_service_account.backend='local'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default_service_account.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate'
+terrahub configure -i project_default_service_account_key -c component.template.variable -D -y
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.triggers.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner -D -y
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner=[]
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.local-exec.when='create'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.local-exec.environment.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.local-exec.environment.file_path='${var.project_default_service_account_key_file_path}'
+terrahub configure -i project_default_service_account_key -c component.template.variable.project_default_service_account_key_file_path.type='string'
+# Create project_default_service_enable
+terrahub component -n project_default_service_enable -t google_project_default_service_enable
+terrahub configure -i project_default_service_enable -c component.dependsOn[0]='../project_default'
+terrahub configure -i project_default_service_enable -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_enable/terraform.tfstate'
+terrahub configure -i project_default_service_enable -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_enable -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_enable -c component.template.variable -D -y
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner -D -y
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner=[]
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.local-exec.when='create'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.local-exec.environment.service_name='${var.project_default_service_enable_service_name}'
+terrahub configure -i project_default_service_enable -c component.template.variable.project_default_service_enable_service_name.type='string'
+# Create project_default_service_account_add_role
+terrahub component -n project_default_service_account_add_role -t google_project_default_service_account_add_role
+terrahub configure -i project_default_service_account_add_role -c component.dependsOn[0]='../project_default'
+terrahub configure -i project_default_service_account_add_role -c component.dependsOn[1]='../project_default_service_account'
+terrahub configure -i project_default_service_account_add_role -c component.dependsOn[2]='../project_default_service_account_key'
+terrahub configure -i project_default_service_account_add_role -c component.dependsOn[3]='../project_default_service_enable'
+terrahub configure -i project_default_service_account_add_role -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account_add_role/terraform.tfstate'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default_service_account.backend='local'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default_service_account.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate'
+terrahub configure -i project_default_service_account_add_role -c component.template.variable -D -y
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.triggers.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner -D -y
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner=[]
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.local-exec.when='create'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.local-exec.environment.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+# Create project_default_import
+terrahub component -n project_default_import -t google_project_default_import
+terrahub configure -i project_default_import -c component.dependsOn[0]='../project_default'
+terrahub configure -i project_default_import -c component.dependsOn[1]='../project_default_service_account_add_role'
+terrahub configure -i project_default_import -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_import/terraform.tfstate'
+terrahub configure -i project_default_import -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_import -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_import -c component.template.variable -D -y
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner -D -y
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner=[]
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner[0].local-exec.local-exec.when='create'
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner[0].local-exec.local-exec.command='cd ${local.project["path"]} && terrahub import -c google_project.project=${data.terraform_remote_state.project_default.project_id} -i project'
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner[0].local-exec.local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
+# terrahub configure -i project_default -c component.template.=''
