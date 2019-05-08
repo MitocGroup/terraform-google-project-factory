@@ -22,10 +22,7 @@ component:
                 environment:
                   project_name: '${local.project_name}'
                   project_id: '${local.project_id}'
-                  organization_id: '${var.organization_id}'
-            - local-exec:
-                when: destroy
-                command: 'echo ${local.project_name}'
+                  organization_id: '${var.project_default_organization_id}'
     output:
       project_name:
         value: '${local.project_name}'

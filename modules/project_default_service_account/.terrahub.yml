@@ -10,13 +10,9 @@ component:
           provisioner:
             - local-exec:
                 when: create
-            - local-exec:
                 command: 'python ${local.component["path"]}/scripts/apply.py'
-            - local-exec:
                 environment:
                   project_id: '${data.terraform_remote_state.project_default.project_id}'
-            - local-exec:
-                environment:
                   service_account_name: '${var.project_default_service_account_service_account_name}'
     output:
       service_account_name:
@@ -35,7 +31,7 @@ component:
             path: >-
               /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
     variable:
-      service_account_name:
+      project_default_service_account_service_account_name:
         type: string
   dependsOn:
     - ../project_default

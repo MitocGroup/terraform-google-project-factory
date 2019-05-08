@@ -9,12 +9,10 @@ component:
           provisioner:
             - local-exec:
                 when: create
-            - local-exec:
                 command: >-
                   cd ${local.project["path"]} && terrahub import -c
                   google_project.project=${data.terraform_remote_state.project_default.project_id}
                   -i project
-            - local-exec:
                 environment:
                   project_id: '${data.terraform_remote_state.project_default.project_id}'
     terraform:
