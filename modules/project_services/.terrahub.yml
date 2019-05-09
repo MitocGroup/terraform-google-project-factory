@@ -1,0 +1,27 @@
+component:
+  name: project_services
+  template:
+    resource:
+      google_project_service:
+        project_services:
+          service: '${element(var.project_services_activate_apis, count.index)}'
+          count: '${length(var.project_services_activate_apis)}'
+          project: '${data.terraform_remote_state.project.thub_id}'
+          disable_on_destroy: '${var.project_services_disable_services_on_destroy}'
+    terraform:
+      backend:
+        local:
+          path: >-
+            /tmp/.terrahub/local_backend/terraform-google-project-factory/project_services/terraform.tfstate
+    data:
+      terraform_remote_state:
+        project:
+          backend: local
+          config:
+            path: >-
+              /tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate
+    tfvars:
+      project_services_activate_apis: []
+      project_services_disable_services_on_destroy: true
+  dependsOn:
+    - ../project

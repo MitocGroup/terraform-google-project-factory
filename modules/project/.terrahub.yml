@@ -1,0 +1,34 @@
+component:
+  name: project
+  template:
+    resource:
+      google_project:
+        project:
+          name: '${data.terraform_remote_state.project_default.project_name}'
+          project_id: '${data.terraform_remote_state.project_default.project_id}'
+    output:
+      id:
+        value: '${google_project.project.id}'
+      thub_id:
+        value: '${google_project.project.id}'
+    terraform:
+      backend:
+        local:
+          path: >-
+            /tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate
+    data:
+      terraform_remote_state:
+        project_default:
+          backend: local
+          config:
+            path: >-
+              /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
+        project_default_service_account_key:
+          backend: local
+          config:
+            path: >-
+              /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account_key/terraform.tfstate
+  dependsOn:
+    - ../project_default_import
+    - ../project_default
+    - ../project_default_service_account_key

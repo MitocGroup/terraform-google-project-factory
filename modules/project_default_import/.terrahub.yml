@@ -1,0 +1,32 @@
+component:
+  name: project_default_import
+  template:
+    resource:
+      null_resource:
+        project_default_import:
+          triggers:
+            project_id: '${data.terraform_remote_state.project_default.project_id}'
+          provisioner:
+            - local-exec:
+                when: create
+                command: >-
+                  cd ${local.project["path"]} && terrahub import -c
+                  google_project.project=${data.terraform_remote_state.project_default.project_id}
+                  -i project
+                environment:
+                  project_id: '${data.terraform_remote_state.project_default.project_id}'
+    terraform:
+      backend:
+        local:
+          path: >-
+            /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_import/terraform.tfstate
+    data:
+      terraform_remote_state:
+        project_default:
+          backend: local
+          config:
+            path: >-
+              /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
+  dependsOn:
+    - ../project_default
+    - ../project_default_service_account_add_role
