@@ -30,11 +30,14 @@ component:
         value: '${local.project_id}'
       organization_id:
         value: '${var.project_default_organization_id}'
-    variable:
-      project_default_project_name:
-        type: string
-      project_default_organization_id:
-        type: string
+    # variable:
+    #   project_default_project_name:
+    #     type: string
+    #   project_default_organization_id:
+    #     type: string
+    tfvars:
+      project_default_project_name: terraform-factory
+      project_default_organization_id: ''
     terraform:
       backend:
         local:

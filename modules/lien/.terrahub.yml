@@ -9,11 +9,6 @@ component:
           origin: '${var.lien_origin}'
           reason: '${var.lien_reason}'
           count: '${var.lien ? 1 : 0}'
-    output:
-      name:
-        value: '${google_resource_manager_lien.lien.name}'
-      create_time:
-        value: '${google_resource_manager_lien.lien.create_time}'
     terraform:
       backend:
         local:
@@ -26,14 +21,19 @@ component:
           config:
             path: >-
               /tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate
-    variable:
-      lien:
-        type: string
-      lien_restrictions:
-        type: list
-      lien_origin:
-        type: string
-      lien_reason:
-        type: string
+    # variable:
+    #   lien:
+    #     type: string
+    #   lien_restrictions:
+    #     type: list
+    #   lien_origin:
+    #     type: string
+    #   lien_reason:
+    #     type: string
+    tfvars:
+      lien: false
+      lien_restrictions: []
+      lien_origin: ''
+      lien_reason: ''
   dependsOn:
     - ../project

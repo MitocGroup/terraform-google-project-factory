@@ -8,13 +8,6 @@ component:
           count: '${length(var.project_services_activate_apis)}'
           project: '${data.terraform_remote_state.project.thub_id}'
           disable_on_destroy: '${var.project_services_disable_services_on_destroy}'
-    output:
-      id:
-        value: '${google_project_service.project_services.id}'
-      thub_id:
-        value: '${google_project_service.project_services.id}'
-      project:
-        value: '${google_project_service.project_services.project}'
     terraform:
       backend:
         local:
@@ -27,10 +20,8 @@ component:
           config:
             path: >-
               /tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate
-    variable:
-      project_services_activate_apis:
-        type: list
-      project_services_disable_services_on_destroy:
-        type: string
+    tfvars:
+      project_services_activate_apis: []
+      project_services_disable_services_on_destroy: true
   dependsOn:
     - ../project
