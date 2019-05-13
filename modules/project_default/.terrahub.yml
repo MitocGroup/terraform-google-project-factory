@@ -30,11 +30,6 @@ component:
         value: '${local.project_id}'
       organization_id:
         value: '${var.project_default_organization_id}'
-    # variable:
-    #   project_default_project_name:
-    #     type: string
-    #   project_default_organization_id:
-    #     type: string
     tfvars:
       project_default_project_name: terraform-factory
       project_default_organization_id: ''
@@ -43,3 +38,7 @@ component:
         local:
           path: >-
             /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
+terraform:
+  varFile:
+    - >-
+      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'

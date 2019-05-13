@@ -1,0 +1,31 @@
+component:
+  name: modul
+  template:
+    resource:
+      null_resource:
+        modul:
+          triggers:
+            command: '${var.command}'
+            components: '${length(var.components)}'
+          provisioner:
+            - local-exec:
+                when: create
+                command: 'python ${local.component["path"]}/scripts/apply.py'
+                environment:
+                  command: '${var.command}'
+                  components: '${jsonencode(var.components)}'
+    variable:
+      command:
+        type: string
+      components:
+        type: map
+    tfvars:
+      command: apply
+      components:
+        project_default: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
+        project_default_service_account: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
+    terraform:
+      backend:
+        local:
+          path: >-
+            /tmp/.terrahub/local_backend/terraform-google-project-factory/modul/terraform.tfstate
