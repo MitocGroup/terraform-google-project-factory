@@ -1,0 +1,1 @@
+{"project_default": {"organization_id": {"sensitive": false, "type": "string", "value": ""}, "project_name": {"sensitive": false, "type": "string", "value": "terraform-factory"}, "project_id": {"sensitive": false, "type": "string", "value": "terraform-factory-6a7a1cc6"}}}
