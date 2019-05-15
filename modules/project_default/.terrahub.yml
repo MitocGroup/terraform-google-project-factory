@@ -38,35 +38,3 @@ component:
         local:
           path: >-
             /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
-terraform:
-  varFile:
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'
-    - >-
-      's3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars'

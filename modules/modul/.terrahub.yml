@@ -41,8 +41,11 @@ component:
     tfvars:
       command: apply
       components:
-        project_default: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
+        # project_default: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
         # project_default_service_account: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
+        # project_default_service_account_add_role: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
+        # project_default_service_account_key: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
+        # project_default_service_enable: s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars
     terraform:
       backend:
         local:

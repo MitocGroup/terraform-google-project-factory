@@ -3,17 +3,17 @@ import json
 import subprocess
 
 def main():
-    component = '{"project_default":"s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars"}'
-    components = eval(component)
-    # components = eval(os.environ['components'])
+    # component = '{"project_default":"s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_dafault/default.tfvars"}'
+    # components = eval(component)
+    components = eval(os.environ['components'])
     includ = []
     for k in components.keys():
         includ.append(k)
     includ = ','.join(includ)
 
     args_output = ['terrahub', 'output', '-o', 'json', '-i', includ, '-y']
-    process = subprocess.Popen(args_output, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd='/mnt/c/Terrahub/terraform-google-project-factory')
-    # process = subprocess.Popen(args_output, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=os.environ['root'])
+    # process = subprocess.Popen(args_output, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd='/mnt/c/Terrahub/terraform-google-project-factory')
+    process = subprocess.Popen(args_output, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=os.environ['root'])
     (result, error) = process.communicate()
 
     rc = process.wait()
@@ -21,7 +21,7 @@ def main():
     if rc != 0:
         print("Error: failed to execute command:")
         print(error)
-    print(result)
+    # print(result)
     with open('output.json', 'wb') as json_file:
         json_file.write(json.dumps(json.loads(result)).encode("utf-8"))
     return 'Succes'
