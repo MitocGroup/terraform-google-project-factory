@@ -131,4 +131,4 @@ terrahub configure -i lien -c component.template.resource.google_resource_manage
 # Create modul
 terrahub component -n modul -t google_modul
 terrahub configure -i modul -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/modul/terraform.tfstate'
-terrahub configure -i modul -c component.template.tfvars.modul_components.project_default='s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_default/default.tfvars'
+terrahub configure -i modul -c component.template.tfvars.modul_components.project_default='s3://xxxxxxx/tfvars/terraform-google-project-factory/project_default/default.tfvars'
