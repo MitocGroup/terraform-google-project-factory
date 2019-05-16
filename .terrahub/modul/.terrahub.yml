@@ -1,0 +1,43 @@
+component:
+  name: modul
+  template:
+    data:
+      external:
+        modul_output_file:
+          depends_on:
+            - null_resource.modul
+          program: 
+            - "cat"
+            - "${path.module}/output.json"
+    resource:
+      null_resource:
+        modul:
+          triggers:
+            command: '${var.modul_command}'
+            components: '${md5(jsonencode(var.modul_components))}'
+            timestamp: '${timestamp()}'
+          provisioner:
+            - local-exec:
+                command: 'python ${local.component["path"]}/scripts/apply.py'
+                environment:
+                  root: '${local.project["path"]}'
+                  command: '${var.modul_command}'
+                  components: '${jsonencode(var.modul_components)}'
+    output:
+      modul:
+        value: '${data.external.modul_output_file.result}'
+    variable:
+      modul_command:
+        type: string
+        default: run
+      modul_components:
+        type: map
+    tfvars:
+      modul_components:
+        project_default: >-
+          s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_default/default.tfvars
+    terraform:
+      backend:
+        local:
+          path: >-
+            /tmp/.terrahub/local_backend/terraform-google-project-factory/modul/terraform.tfstate
