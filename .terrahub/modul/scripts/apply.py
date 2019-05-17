@@ -15,8 +15,13 @@ def main():
     process = subprocess.Popen(args_init, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=os.environ['root'])
     (result, error) = process.communicate()
 
-    process.wait()
+    rc = process.wait()
 
+    if rc != 0:
+        print("Error: failed to execute command:")
+        print(error)
+        return 'Error'
+    
     args_output = ['terrahub', 'output', '-o', 'json', '-i', includ, '-y']
     process = subprocess.Popen(args_output, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=os.environ['root'])
     (result, error) = process.communicate()
@@ -26,6 +31,7 @@ def main():
     if rc != 0:
         print("Error: failed to execute command:")
         print(error)
+        return 'Error'
     
     
     response = {}

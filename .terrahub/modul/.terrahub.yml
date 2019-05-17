@@ -6,9 +6,9 @@ component:
         modul_output_file:
           depends_on:
             - null_resource.modul
-          program: 
-            - "cat"
-            - "${path.module}/output.json"
+          program:
+            - cat
+            - '${path.module}/output.json'
     resource:
       null_resource:
         modul:
@@ -35,7 +35,7 @@ component:
     tfvars:
       modul_components:
         project_default: >-
-          s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_default/default.tfvars
+          s3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars
     terraform:
       backend:
         local:
