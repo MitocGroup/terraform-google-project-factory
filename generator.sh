@@ -1,14 +1,15 @@
 #!/bin/bash
-rm -rf ./modules
-# rm ./.terrahub.yml
-# terrahub project -n terraform-google-project-factory -d ./
-# terrahub configure -c terraform.version=0.11.11
+rm -rf ./.terrahub
+rm ./.terrahub.yml
+terrahub project -n terraform-google-project-factory -d ./
+terrahub configure -c terraform.version=0.11.11
 # terrahub configure -c template.provider.google={}
-mkdir modules
-cd modules
+mkdir .terrahub
+cd .terrahub
 # Create project_default
 terrahub component -n project_default -t google_project_default
 terrahub configure -i project_default -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default -c component.template.variable -D -y
 # Create project_default_service_account
 terrahub component -n project_default_service_account -t google_project_default_service_account
 terrahub configure -i project_default_service_account -c component.dependsOn[0]='../project_default'
@@ -127,10 +128,7 @@ terrahub configure -i lien -c component.template.resource.google_resource_manage
 terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.restrictions='${var.lien_restrictions}'
 terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.origin='${var.lien_origin}'
 terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.reason='${var.lien_reason}'
-# Create lien
-# terrahub configure -i project_dafault -c terraform.varFile[0]='s3://******/terraform-google-project-factory/project_dafault/terraform.tfvars'
-# terrahub configure -i project_default_service_account -c terraform.varFile[0]='s3://******/terraform-google-project-factory/project_default_service_account/terraform.tfvars'
-# terrahub configure -i project_default_service_account_key -c terraform.varFile[0]='s3://******/terraform-google-project-factory/project_default_service_account_key/terraform.tfvars'
-# terrahub configure -i project_default_service_enable -c terraform.varFile[0]='s3://******/terraform-google-project-factory/project_default_service_enable/terraform.tfvars'
-# terrahub configure -i project_services -c terraform.varFile[0]='s3://******/terraform-google-project-factory/project_services/terraform.tfvars'
-# terrahub configure -i lien -c terraform.varFile[0]='s3://******/terraform-google-project-factory/lien/terraform.tfvars'
+# Create factory
+terrahub component -n factory -t google_factory
+terrahub configure -i factory -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/factory/terraform.tfstate'
+terrahub configure -i factory -c component.template.tfvars.factory_components.project_default='s3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars'

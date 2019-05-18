@@ -5,7 +5,7 @@ component:
       project_name: '${var.project_default_project_name}'
       project_id: >-
         ${format("%s-%s",var.project_default_project_name,
-        random_id.random_project_id_suffix.hex)}
+        random_id.random_project_id_suffix.dec)}
     resource:
       random_id:
         random_project_id_suffix:
@@ -30,16 +30,13 @@ component:
         value: '${local.project_id}'
       organization_id:
         value: '${var.project_default_organization_id}'
-    # variable:
-    #   project_default_project_name:
-    #     type: string
-    #   project_default_organization_id:
-    #     type: string
-    tfvars:
-      project_default_project_name: terraform-factory
-      project_default_organization_id: ''
     terraform:
       backend:
         local:
           path: >-
             /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
+terraform:
+  varFile:
+    - >-
+      's3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars'
+    

@@ -38,11 +38,6 @@ component:
           config:
             path: >-
               /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate
-    # variable:
-    #   project_default_service_account_key_file_path:
-    #     type: string
-    tfvars:
-      project_default_service_account_key_file_path: '/tmp/.google/terraform_google_access.json'
   dependsOn:
     - ../project_default
     - ../project_default_service_account
