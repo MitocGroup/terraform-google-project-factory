@@ -128,7 +128,7 @@ terrahub configure -i lien -c component.template.resource.google_resource_manage
 terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.restrictions='${var.lien_restrictions}'
 terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.origin='${var.lien_origin}'
 terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.reason='${var.lien_reason}'
-# Create modul
-terrahub component -n modul -t google_modul
-terrahub configure -i modul -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/modul/terraform.tfstate'
-terrahub configure -i modul -c component.template.tfvars.modul_components.project_default='s3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars'
+# Create factory
+terrahub component -n factory -t google_factory
+terrahub configure -i factory -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/factory/terraform.tfstate'
+terrahub configure -i factory -c component.template.tfvars.factory_components.project_default='s3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars'
