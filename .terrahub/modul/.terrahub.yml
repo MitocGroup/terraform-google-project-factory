@@ -35,7 +35,9 @@ component:
     tfvars:
       modul_components:
         project_default: >-
-          s3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars
+          s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_default/default.tfvars
+        project_default_service_account: >-
+          s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_default_service_account/default.tfvars
     terraform:
       backend:
         local:

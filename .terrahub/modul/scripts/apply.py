@@ -27,19 +27,19 @@ def main():
     (result, error) = process.communicate()
 
     rc = process.wait()
-
+    print(includ)
+    print(result)
     if rc != 0:
         print("Error: failed to execute command:")
         print(error)
         return 'Error'
-    
     
     response = {}
     for (key, val) in json.loads(result).items():
     	for (key_sub, val_sub) in val.items():
             response[key_sub]=val_sub['value']
 
-
+    
     with open('output.json', 'wb') as json_file:
         json_file.write(json.dumps(response).encode("utf-8"))
 
