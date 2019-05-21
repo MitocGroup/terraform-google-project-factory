@@ -1,7 +1,7 @@
 # terraform-google-project-factory
 Terraform Repository for Google Project Factory
 
-## Create Google Project Factory Modul
+## Create Google Project Factory
 
 Run the following command in terminal:
 ```shell
