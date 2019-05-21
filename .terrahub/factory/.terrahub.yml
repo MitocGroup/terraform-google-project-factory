@@ -1,39 +1,39 @@
 component:
-  name: modul
+  name: factory
   template:
     data:
       external:
-        modul_output_file:
+        factory_output_file:
           depends_on:
-            - null_resource.modul
+            - null_resource.factory
           program:
             - cat
             - '${path.module}/output.json'
     resource:
       null_resource:
-        modul:
+        factory:
           triggers:
-            command: '${var.modul_command}'
-            components: '${md5(jsonencode(var.modul_components))}'
+            command: '${var.factory_command}'
+            components: '${md5(jsonencode(var.factory_components))}'
             timestamp: '${timestamp()}'
           provisioner:
             - local-exec:
                 command: 'python ${local.component["path"]}/scripts/apply.py'
                 environment:
                   root: '${local.project["path"]}'
-                  command: '${var.modul_command}'
-                  components: '${jsonencode(var.modul_components)}'
+                  command: '${var.factory_command}'
+                  components: '${jsonencode(var.factory_components)}'
     output:
-      modul:
-        value: '${data.external.modul_output_file.result}'
+      factory:
+        value: '${data.external.factory_output_file.result}'
     variable:
-      modul_command:
+      factory_command:
         type: string
         default: run
-      modul_components:
+      factory_components:
         type: map
     tfvars:
-      modul_components:
+      factory_components:
         project_default: >-
           s3://data-lake-terrahub-us-east-1/AWSLogs/tfvars/terraform-google-project-factory/project_default/default.tfvars
         project_default_service_account: >-
@@ -42,4 +42,4 @@ component:
       backend:
         local:
           path: >-
-            /tmp/.terrahub/local_backend/terraform-google-project-factory/modul/terraform.tfstate
+            /tmp/.terrahub/local_backend/terraform-google-project-factory/factory/terraform.tfstate
