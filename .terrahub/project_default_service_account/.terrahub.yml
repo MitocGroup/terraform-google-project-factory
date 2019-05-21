@@ -35,5 +35,4 @@ component:
 terraform:
   varFile:
     - >-
-      's3://xxx/tfvars/terraform-google-project-factory/project_default_service_account/default.tfvars'
-    
+      'gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default_service_account/default.tfvars'

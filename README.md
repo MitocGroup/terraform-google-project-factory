@@ -14,10 +14,3 @@ Run the following command in terminal:
 ```shell
 gcloud beta auth application-default login
 ```
-
-## Login to AWS Cloud
-
-Run the following command in terminal:
-```shell
-aws-saml login
-```

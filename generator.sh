@@ -131,4 +131,10 @@ terrahub configure -i lien -c component.template.resource.google_resource_manage
 # Create factory
 terrahub component -n factory -t google_factory
 terrahub configure -i factory -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/factory/terraform.tfstate'
-terrahub configure -i factory -c component.template.tfvars.factory_components.project_default='s3://xxx/tfvars/terraform-google-project-factory/project_default/default.tfvars'
+terrahub configure -i factory -c component.template.tfvars.factory_components.project_default='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default/default.tfvars'
+terrahub configure -i factory -c component.template.tfvars.factory_components.project_default_service_account='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default_service_account/default.tfvars'
+# terrahub configure -i factory -c component.template.tfvars.factory_components.project_default_service_account_key='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default_service_account_key/default.tfvars'
+# terrahub configure -i factory -c component.template.tfvars.factory_components.project_default_service_enable='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default_service_enable/default.tfvars'
+# terrahub configure -i factory -c component.template.tfvars.factory_components.project='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project/default.tfvars'
+# terrahub configure -i factory -c component.template.tfvars.factory_components.lien='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/lien/default.tfvars'
+# terrahub configure -i factory -c component.template.tfvars.factory_components.project_services='gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_services/default.tfvars'
