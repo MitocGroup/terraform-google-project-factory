@@ -367,3 +367,131 @@ Your output should be similar to the one below:
 
 > NOTE: This component used the Python client library to import default google project to component
 project. This component is the equivalent of the command `terraform import ...`
+
+## Customize TerraHub Component for Google Project
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i project -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate'
+terrahub configure -i project -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project -c component.template.data.terraform_remote_state.project_default_service_account_key.backend='local'
+terrahub configure -i project -c component.template.data.terraform_remote_state.project_default_service_account_key.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account_key/terraform.tfstate'
+terrahub configure -i project -c component.template.resource.google_project.project.name='${data.terraform_remote_state.project_default.project_name}'
+terrahub configure -i project -c component.template.resource.google_project.project.project_id='${data.terraform_remote_state.project_default.project_id}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Outputs
+
+| Name | Description | Type |
+|------|-------------|:----:|
+| id | The id of project | string |
+
+## Customize TerraHub Component for Project Services
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i project_services -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_services/terraform.tfstate'
+terrahub configure -i project_services -c component.template.data.terraform_remote_state.project.backend='local'
+terrahub configure -i project_services -c component.template.data.terraform_remote_state.project.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate'
+terrahub configure -i project_services -c component.template.variable -D -y
+terrahub configure -i project_services -c component.template.output -D -y
+terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.count='${length(var.project_services_activate_apis)}'
+terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.project='${data.terraform_remote_state.project.thub_id}'
+terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.service='${element(var.project_services_activate_apis, count.index)}'
+terrahub configure -i project_services -c component.template.resource.google_project_service.project_services.disable_on_destroy='${var.project_services_disable_services_on_destroy}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| project_services_activate_apis | The list of the project services to be enabled | list || yes |
+
+## Customize TerraHub Component for Lien
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i lien -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/lien/terraform.tfstate'
+terrahub configure -i lien -c component.template.data.terraform_remote_state.project.backend='local'
+terrahub configure -i lien -c component.template.data.terraform_remote_state.project.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project/terraform.tfstate'
+terrahub configure -i lien -c component.template.variable -D -y
+terrahub configure -i lien -c component.template.output -D -y
+terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.count='${var.lien ? 1 : 0}'
+terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.parent='projects/${data.terraform_remote_state.project.thub_id}'
+terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.restrictions='${var.lien_restrictions}'
+terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.origin='${var.lien_origin}'
+terrahub configure -i lien -c component.template.resource.google_resource_manager_lien.lien.reason='${var.lien_reason}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| lien | The flag of lien. If this flag is `true` then this component will be created | bool || yes |
+| lien_restrictions | The types of operations which should be blocked as a result of this Lien. Each value should correspond to an IAM permission. The server will validate the permissions against those for which Liens are supported. An empty list is meaningless and will be rejected. | list || yes |
+| lien_origin | A stable, user-visible/meaningful string identifying the origin of the Lien, intended to be inspected programmatically. Maximum length of 200 characters. | string || yes |
+| lien_reason | Concise user-visible strings indicating why an action cannot be performed on a resource. Maximum length of 200 characters. | string || yes |
+
+## Visualize TerraHub Components
+
+Run the following command in terminal:
+```shell
+terrahub graph
+```
+
+Your output should be similar to the one below:
+```
+Project: terraform-google-project-factory
+ ├─ factory [path: .terrahub/factory]
+ ├─ project_default [path: .terrahub/project_default]
+ │  ├─ project_default_import [path: .terrahub/project_default_import]
+ │  │  └─ project [path: .terrahub/project]
+ │  │     ├─ lien [path: .terrahub/lien]
+ │  │     └─ project_services [path: .terrahub/project_services]
+ │  ├─ project_default_service_account_add_role [path: .terrahub/project_default_service_account_add_role]
+ │  ├─ project_default_service_account_key [path: .terrahub/project_default_service_account_key]
+ │  ├─ project_default_service_account [path: .terrahub/project_default_service_account]
+ │  └─ project_default_service_enable [path: .terrahub/project_default_service_enable]
+ └─ project_services_use_factory [path: components/project_services_use_factory]
+```
+
+## Run TerraHub Automation
+
+### Enable components
+
+Run the following command in terminal:
+```shell
+terrahub configure -i factory -c component.template.tfvars.factory_components.{ COMPONENT NAME }=gs://{ STORAGE NAME }/{ STORAGE KEY }/default.tfvars
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Run TerraHub Automation
+
+Run the following command in terminal:
+```shell
+terrahub run factory -y -a
+```
+
+Your output should be similar to the one below:
+```
+```
