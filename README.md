@@ -251,3 +251,42 @@ Your output should be similar to the one below:
 
 > NOTE: This component used the Python client library to create new service account.
 This component is the equivalent of the command `gcloud iam service-accounts create ...`
+
+## Customize TerraHub Component for Default Service Account Key
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i project_default_service_account_key -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account_key/terraform.tfstate'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default_service_account.backend='local'
+terrahub configure -i project_default_service_account_key -c component.template.data.terraform_remote_state.project_default_service_account.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate'
+terrahub configure -i project_default_service_account_key -c component.template.variable -D -y
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.triggers.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.when='create'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.environment.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+terrahub configure -i project_default_service_account_key -c component.template.resource.null_resource.project_default_service_account_key.provisioner[0].local-exec.environment.file_path='${var.project_default_service_account_key_file_path}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| project_default_service_account_key_file_path | The path where the google credentials file will be stored | string || yes |
+
+### Outputs
+
+| Name | Description | Type |
+|------|-------------|:----:|
+| file_path | The path where the google credentials file was stored | string |
+
+> NOTE: This component used the Python client library to create new service account key.
+This component is the equivalent of the command `gcloud iam service-accounts keys create ...`
