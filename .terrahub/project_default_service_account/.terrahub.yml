@@ -32,7 +32,3 @@ component:
               /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
   dependsOn:
     - ../project_default
-terraform:
-  varFile:
-    - >-
-      'gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default_service_account/default.tfvars'
