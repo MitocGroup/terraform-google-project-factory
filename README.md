@@ -163,6 +163,13 @@ Your output should be similar to the one below:
 
 ### Outputs
 
+| Name | Description | Type |
+|------|-------------|:----:|
+| project_name | The name of project | string |
+| project_id | The id of project | string |
+| organization_id | The id of organization | string |
+| service_account_name | The name of service account | string |
+| file_path | The path of google credential file | string |
 
 ### Sample
 
