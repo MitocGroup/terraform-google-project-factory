@@ -147,7 +147,6 @@ Your output should be similar to the one below:
 
 Run the following commands in terminal:
 ```shell
-terrahub component -n factory -t google_factory
 terrahub configure -i factory -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/factory/terraform.tfstate'
 ```
 
@@ -190,7 +189,6 @@ indicated in field `factory_components`
 
 Run the following commands in terminal:
 ```shell
-terrahub component -n project_default -t google_project_default
 terrahub configure -i project_default -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
 terrahub configure -i project_default -c component.template.variable -D -y
 ```
@@ -217,3 +215,39 @@ Your output should be similar to the one below:
 
 > NOTE: This component used the Python client library to create new project in gcloud.
 This component is the equivalent of the command `gcloud projects create ...`
+
+## Customize TerraHub Component for Default Service Account
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i project_default_service_account -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate'
+terrahub configure -i project_default_service_account -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_account -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_account -c component.template.variable -D -y
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.when='create'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account -c component.template.resource.null_resource.project_default_service_account.provisioner[0].local-exec.environment.service_account_name='${var.project_default_service_account_service_account_name}'
+terrahub configure -i project_default_service_account -c component.template.output.service_account_name.value='${data.terraform_remote_state.project_default.project_id}@${data.terraform_remote_state.project_default.project_id}.iam.gserviceaccount.com'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| project_default_service_account_service_account_name | The name of service account | string || yes |
+
+### Outputs
+
+| Name | Description | Type |
+|------|-------------|:----:|
+| service_account_name | The full name (email) of service account | string |
+
+> NOTE: This component used the Python client library to create new service account.
+This component is the equivalent of the command `gcloud iam service-accounts create ...`
