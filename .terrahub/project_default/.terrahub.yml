@@ -35,7 +35,3 @@ component:
         local:
           path: >-
             /tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate
-terraform:
-  varFile:
-    - >-
-      'gs://data-lake-terrahub/tfvars/terraform-google-project-factory/project_default/default.tfvars'
