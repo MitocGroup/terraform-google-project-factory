@@ -345,3 +345,25 @@ Your output should be similar to the one below:
 
 > NOTE: This component used the Python client library to enable iam.googleapis.com.
 This component is the equivalent of the command `gcloud iam service-accounts add-iam-policy-binding ...`
+
+## Customize TerraHub Component for Default Project Import
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i project_default_import -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_import/terraform.tfstate'
+terrahub configure -i project_default_import -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_import -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_import -c component.template.variable -D -y
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner[0].local-exec.when='create'
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner[0].local-exec.command='cd ${local.project["path"]} && terrahub import -c google_project.project=${data.terraform_remote_state.project_default.project_id} -i project'
+terrahub configure -i project_default_import -c component.template.resource.null_resource.project_default_import.provisioner[0].local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+> NOTE: This component used the Python client library to import default google project to component
+project. This component is the equivalent of the command `terraform import ...`
