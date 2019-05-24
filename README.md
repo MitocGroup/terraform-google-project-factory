@@ -290,3 +290,33 @@ Your output should be similar to the one below:
 
 > NOTE: This component used the Python client library to create new service account key.
 This component is the equivalent of the command `gcloud iam service-accounts keys create ...`
+
+## Customize TerraHub Component for Default Service Enable
+
+Run the following commands in terminal:
+```shell
+terrahub component -n project_default_service_enable -t google_project_default_service_enable -o ../google_project_default
+terrahub configure -i project_default_service_enable -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_enable/terraform.tfstate'
+terrahub configure -i project_default_service_enable -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_enable -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_enable -c component.template.variable -D -y
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.when='create'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_enable -c component.template.resource.null_resource.project_default_service_enable.provisioner[0].local-exec.environment.service_name='${var.project_default_service_enable_service_name}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| project_default_service_enable_service_name | The name of the service to be enabled | string || yes |
+
+> NOTE: This component used the Python client library to enable iam.googleapis.com.
+This component is the equivalent of the command `gcloud services enable ...`
