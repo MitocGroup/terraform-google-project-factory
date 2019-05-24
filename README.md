@@ -295,7 +295,6 @@ This component is the equivalent of the command `gcloud iam service-accounts key
 
 Run the following commands in terminal:
 ```shell
-terrahub component -n project_default_service_enable -t google_project_default_service_enable -o ../google_project_default
 terrahub configure -i project_default_service_enable -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_enable/terraform.tfstate'
 terrahub configure -i project_default_service_enable -c component.template.data.terraform_remote_state.project_default.backend='local'
 terrahub configure -i project_default_service_enable -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
@@ -320,3 +319,29 @@ Your output should be similar to the one below:
 
 > NOTE: This component used the Python client library to enable iam.googleapis.com.
 This component is the equivalent of the command `gcloud services enable ...`
+
+## Customize TerraHub Component for Add Service Account to Role
+
+Run the following commands in terminal:
+```shell
+terrahub configure -i project_default_service_account_add_role -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account_add_role/terraform.tfstate'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default.backend='local'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default_service_account.backend='local'
+terrahub configure -i project_default_service_account_add_role -c component.template.data.terraform_remote_state.project_default_service_account.config.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default_service_account/terraform.tfstate'
+terrahub configure -i project_default_service_account_add_role -c component.template.variable -D -y
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.triggers.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.triggers.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.when='create'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.command='python ${local.component["path"]}/scripts/apply.py'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.environment.project_id='${data.terraform_remote_state.project_default.project_id}'
+terrahub configure -i project_default_service_account_add_role -c component.template.resource.null_resource.project_default_service_account_add_role.provisioner[0].local-exec.environment.service_account_name='${data.terraform_remote_state.project_default_service_account.service_account_name}'
+```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+> NOTE: This component used the Python client library to enable iam.googleapis.com.
+This component is the equivalent of the command `gcloud iam service-accounts add-iam-policy-binding ...`
