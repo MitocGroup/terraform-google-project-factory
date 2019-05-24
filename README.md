@@ -93,6 +93,8 @@ Run the following commands in terminal:
 mkdir terraform-google-project-factory
 cd terraform-google-project-factory
 terrahub project -n terraform-google-project-factory
+mkdir .terrahub
+cd .terrahub
 ```
 
 Your output should be similar to the one below:
@@ -181,11 +183,37 @@ factory_components:
 ...
 ```
 
-> NOTE: 
+> NOTE: This component used the Python client library to run the components
+indicated in field `factory_components`
 
-## Create Google Project Factory Modul
+## Customize TerraHub Component for Default Project
 
-Run the following command in terminal:
+Run the following commands in terminal:
 ```shell
-./generator.sh
+terrahub component -n project_default -t google_project_default
+terrahub configure -i project_default -c component.template.terraform.backend.local.path='/tmp/.terrahub/local_backend/terraform-google-project-factory/project_default/terraform.tfstate'
+terrahub configure -i project_default -c component.template.variable -D -y
 ```
+
+Your output should be similar to the one below:
+```
+✅ Done
+```
+
+### Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| project_default_project_name | The name of google project | string || yes |
+| project_default_organization_id | The id of organization | string || yes |
+
+### Outputs
+
+| Name | Description | Type |
+|------|-------------|:----:|
+| project_name | The name of project | string |
+| project_id | The id of project | string |
+| organization_id | The id of organization | string |
+
+> NOTE: This component used the Python client library to create new project in gcloud.
+This component is the equivalent of the command `gcloud projects create ...`
